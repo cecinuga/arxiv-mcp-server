@@ -17,8 +17,9 @@ func main(){
 	ctx := context.Background();
 	server := mcp.NewServer(
 		&mcp.Implementation{
-			Name:		"arxiv.org server",
 			Version:  	"v1.0.0",
+			Name:		"arxiv.org server",
+			Title: 		"Thank you to arXiv for use of its open access interoperability.",
 		},
 		nil,
 	);
