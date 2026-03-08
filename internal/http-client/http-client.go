@@ -12,9 +12,16 @@ type Client struct {
 	httpClient *http.Client
 	baseURL    string
 	userAgent  string
+
+	rateLimiter <-chan time.Time
+	
+	maxRetries int
+	retryDelay time.Duration
 }
 
 func New() *Client {
+	ticker := time.NewTicker(3 * time.Second)
+
 	transport := &http.Transport{
 		MaxIdleConns: 1,
 		MaxIdleConnsPerHost: 1,
@@ -24,10 +31,16 @@ func New() *Client {
 	return &Client {
 		baseURL: "http://export.arxiv.org/api/query",
 		userAgent: "arxiv-mcp-server/1.0.0",
+
 		httpClient: &http.Client{
 			Timeout: 10 * time.Second,
 			Transport: transport,
 		},
+
+		rateLimiter: ticker.C,
+
+		maxRetries: 3,
+		retryDelay: 3 * time.Second,
 	}
 }
 
@@ -51,7 +64,31 @@ func (c *Client) do(
 		req.Header.Set(k, v)
 	}
 
-	return c.httpClient.Do(req)
+	var resp *http.Response
+	var respErr error
+
+	for attempt := 0; attempt <= c.maxRetries; attempt++ {
+		select {
+		case <- ctx.Done():
+			return nil, ctx.Err()
+		case <- c.rateLimiter:
+		}
+
+		resp, respErr := c.httpClient.Do(req)
+		if respErr == nil && resp.StatusCode < 500 {
+			return resp, nil
+		}
+		defer resp.Body.Close()
+		
+		if attempt == c.maxRetries {
+			break
+		}
+
+		backof := time.Duration(1<<attempt) * c.retryDelay
+		time.Sleep(backof)
+	}
+
+	return resp, respErr
 }
 
 func (c *Client) Get(ctx context.Context, path string) (*http.Response, error) {
