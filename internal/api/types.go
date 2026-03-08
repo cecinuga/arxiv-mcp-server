@@ -1,6 +1,6 @@
-package main
+package api
 
-type GreetInput struct {
+type GreetParams struct {
 	Name string `json:"name" jsonschema:"il nome della persona da salutare"`
 }
 

@@ -1,13 +1,14 @@
-package main
+package handler
 
 import (
 	"context"
 	"fmt"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
+	"arxiv-mcp-server/internal/api"
 )
 
-func handleGreet(ctx context.Context, req *mcp.CallToolRequest, input GreetInput) (
+func HandleGreet(_ context.Context, _ *mcp.CallToolRequest, input api.GreetParams) (
 	*mcp.CallToolResult, any, error,
 ) {
 	msg := fmt.Sprintf("Ciao, %s! Benvenuto nel server MCP.", input.Name)
