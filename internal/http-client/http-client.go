@@ -91,8 +91,12 @@ func (c *Client) do(
 	return resp, respErr
 }
 
-func (c *Client) Get(ctx context.Context, path string) (*http.Response, error) {
+func (c *Client) get(ctx context.Context, path string) (*http.Response, error) {
 	return c.do(ctx, http.MethodGet, path, nil, nil)
+}
+
+func (c *Client) Get(ctx context.Context, params QueryParams) (*http.Response, error) {
+	return nil, nil;
 }
 
 func ReadBody(resp *http.Response) ([]byte, error){
