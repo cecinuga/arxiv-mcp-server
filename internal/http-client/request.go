@@ -5,6 +5,10 @@ import (
 	"reflect"
 )
 
+type Parsable interface {
+	Parse() string
+}
+
 type QueryParams struct {
 	IdList []int `query:"id_list" queryschema:"list containing the article id u wanna search"`
 	Start int `query:"start" queryschema:"apply paging defines the index of the first returned result"`
@@ -13,7 +17,49 @@ type QueryParams struct {
 }
 
 func (q *QueryParams) Parse() string {
-	return ""
+	var query string = "";
+	var first bool = true;
+
+	v := reflect.ValueOf(q).Elem();
+	t := reflect.TypeOf(*q);
+
+	for i := 0; i < t.NumField(); i++ {
+		field := t.Field(i);
+		value := v.FieldByName(field.Name);
+
+		key := field.Tag.Get("query");
+		
+		if value.IsZero() {  continue } 
+
+		// IMPROVE TYPE ASSERTION
+		var val string;
+		parsableType := (*Parsable)(nil);
+		
+		if reflect.PointerTo(field.Type).Implements(reflect.TypeOf(parsableType).Elem()) {
+			parsable := value.Addr().Interface().(Parsable)
+			val = parsable.Parse();
+		} else {
+			switch field.Type.Kind(){
+			case reflect.Int:
+				val = fmt.Sprintf("%d", value.Interface().(int))
+			case reflect.String:
+				val = value.Interface().(string)
+			case reflect.Slice: // IMPROVE TYPE ASSERTION
+				val = fmt.Sprintf("%v", value.Interface()) 
+			}
+		}
+
+		if first {
+			query = fmt.Sprintf("%s=%s", key, val)
+		}else {
+			query = fmt.Sprintf("%s&%s=%s", query, key, val)
+		}
+
+		first = false;
+
+	}
+
+	return query;
 }
 
 type SearchQuery struct {
@@ -28,7 +74,8 @@ type SearchQuery struct {
 }
 
 func (q *SearchQuery) Parse() string {
-	var query string = "search_query";
+	var query string = "";
+	var first bool = true;
 
 	v := reflect.ValueOf(*q);
 	t := reflect.TypeOf(*q);
@@ -38,14 +85,16 @@ func (q *SearchQuery) Parse() string {
 		value := v.FieldByName(field.Name);
 		
 		key := field.Tag.Get("query");
-		val   := value.Interface().(string);
-		if val == "" { continue }	
+		val := value.Interface().(string);
+		if value.IsZero() { continue }
 
-		if i == 0 {
-			query = fmt.Sprintf("%s=%s:%s", query, key, val)
-			continue;
+		if first {
+			query = fmt.Sprintf("%s:%s", key, val)
+		} else { 
+			query = fmt.Sprintf("%s+AND+%s:%s", query, key, val)
 		}
-		query = fmt.Sprintf("%s+AND+%s:%s", query, key, val)
+
+		first = false;
 	}
 
 	return query;
