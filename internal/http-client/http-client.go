@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"time"
 )
@@ -91,15 +92,23 @@ func (c *Client) do(
 	return resp, respErr
 }
 
+func ReadBody(resp *http.Response) ([]byte, error){
+	defer resp.Body.Close()
+	return io.ReadAll(resp.Body)
+}
+
 func (c *Client) get(ctx context.Context, path string) (*http.Response, error) {
 	return c.do(ctx, http.MethodGet, path, nil, nil)
 }
 
 func (c *Client) Get(ctx context.Context, params QueryParams) (*http.Response, error) {
-	return nil, nil;
-}
+	query := params.Parse()
 
-func ReadBody(resp *http.Response) ([]byte, error){
-	defer resp.Body.Close()
-	return io.ReadAll(resp.Body)
+	res, err := c.get(ctx, query)
+	if err != nil {
+		log.Fatalf("[!] error API: %s", err);
+		log.Fatalf("[!] query params: %s", query);
+	}
+	
+	return res, nil;
 }
