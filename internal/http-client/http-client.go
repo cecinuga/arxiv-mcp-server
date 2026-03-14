@@ -4,9 +4,10 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"time"
+
+	"golang.org/x/tools/blog/atom"
 )
 
 type Client struct {
@@ -102,14 +103,18 @@ func (c *Client) get(ctx context.Context, query string) (*http.Response, error) 
 	return c.do(ctx, http.MethodGet, query, nil, nil)
 }
 
-func (c *Client) Get(ctx context.Context, params QueryParams) (*http.Response, error) {
+func (c *Client) Get(ctx context.Context, params QueryParams) (*atom.Feed, error) {
 	query := params.Parse()
 
 	res, err := c.get(ctx, query)
 	if err != nil {
-		log.Fatalf("[!] error API: %s", err);
-		log.Fatalf("[!] query params: %s", query);
+		return nil, err
+	}
+
+	feed, err := ParseAtom(res);
+	if err != nil {
+		return nil, err
 	}
 	
-	return res, nil;
+	return feed, nil;
 }
