@@ -283,11 +283,7 @@ The AI agent invokes `export-metadata` with the appropriate parameters and then 
 
 - [ ] **Dockerfile**: add a Dockerfile to simplify deployment and integration in containerized environments.
 
-- [ ] **CI/CD pipeline**: set up GitHub Actions for automated build, test, and linting on every push/PR.
-
 - [ ] **`search-similar` tool**: given an article ID, find related articles based on category and abstract keywords.
-
-- [ ] **SSE transport support**: in addition to stdio, add Server-Sent Events as an alternative transport, useful for web integrations.
 
 - [ ] **OpenAPI/JSON Schema documentation**: automatically generate tool parameter documentation from the `queryschema` struct tags.
 
