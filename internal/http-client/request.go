@@ -2,6 +2,7 @@ package httpclient
 
 import (
 	"fmt"
+	"net/url"
 	"reflect"
 )
 
@@ -18,19 +19,18 @@ type QueryParams struct {
 
 func (q *QueryParams) Parse() string {
 	var query string = "";
-	var first bool = true;
 
 	v := reflect.ValueOf(q).Elem();
 	t := reflect.TypeOf(*q);
 
+	var first bool = true;
 	for i := 0; i < t.NumField(); i++ {
 		field := t.Field(i);
 		value := v.FieldByName(field.Name);
+		if value.IsZero() {  continue } 
 
 		key := field.Tag.Get("query");
 		
-		if value.IsZero() {  continue } 
-
 		// IMPROVE TYPE ASSERTION
 		var val string;
 		parsableType := (*Parsable)(nil);
@@ -39,6 +39,7 @@ func (q *QueryParams) Parse() string {
 			parsable := value.Addr().Interface().(Parsable)
 			val = parsable.Parse();
 		} else {
+
 			switch field.Type.Kind(){
 			case reflect.Int:
 				val = fmt.Sprintf("%d", value.Interface().(int))
@@ -47,6 +48,7 @@ func (q *QueryParams) Parse() string {
 			case reflect.Slice: // IMPROVE TYPE ASSERTION
 				val = fmt.Sprintf("%v", value.Interface()) 
 			}
+			
 		}
 
 		if first {
@@ -56,7 +58,6 @@ func (q *QueryParams) Parse() string {
 		}
 
 		first = false;
-
 	}
 
 	return query;
@@ -75,7 +76,6 @@ type SearchQuery struct {
 
 func (q *SearchQuery) Parse() string {
 	var query string = "";
-	var first bool = true;
 
 	v := reflect.ValueOf(*q);
 	t := reflect.TypeOf(*q);
@@ -83,18 +83,18 @@ func (q *SearchQuery) Parse() string {
 	for i := 0; i < t.NumField(); i++ {
 		field := t.Field(i);
 		value := v.FieldByName(field.Name);
-		
-		key := field.Tag.Get("query");
-		val := value.Interface().(string);
 		if value.IsZero() { continue }
 
-		if first {
+		key := field.Tag.Get("query");
+		val := value.Interface().(string);
+
+		val = url.QueryEscape(val)
+
+		if i == 0 {
 			query = fmt.Sprintf("%s:%s", key, val)
 		} else { 
 			query = fmt.Sprintf("%s+AND+%s:%s", query, key, val)
 		}
-
-		first = false;
 	}
 
 	return query;
