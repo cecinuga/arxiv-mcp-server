@@ -1,11 +1,11 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"os/exec"
-
+	"context"
+	httpclient "arxiv-mcp-server/internal/http-client"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
@@ -30,8 +30,11 @@ func main(){
 	defer session.Close()
 
 	res, err := session.CallTool(ctx, &mcp.CallToolParams{
-		Name:	  "greet",
-		Arguments: map[string]any{ "name": "Cecinuga" },
+		Name:	  "export",
+		Arguments: httpclient.QueryParams{ 
+			MaxResults: 1, 
+			Search: httpclient.SearchQuery{ Title:"Attention is all you need" },
+		},
 	})
 
 	fmt.Println(res.Content[0].(*mcp.TextContent).Text)

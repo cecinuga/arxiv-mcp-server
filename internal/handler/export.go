@@ -24,9 +24,7 @@ func NewExport(client *httpclient.Client) func(context.Context, *mcp.CallToolReq
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		entries := feed.Entry;
 		
-        return &mcp.CallToolResult{}, entries, nil
+        return &mcp.CallToolResult{}, feed, nil
     }
 }

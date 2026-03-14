@@ -28,7 +28,6 @@ func main(){
 	mcp.AddTool(server, &mcp.Tool{
 		Name:        "export",
 		Description: "Export article from arxiv.org",
-		OutputSchema: `xml:"outputSchema,omitempty"`,
 	}, handler.NewExport(client))
 
 	transport := &mcp.StdioTransport{};

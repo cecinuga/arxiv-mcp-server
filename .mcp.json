@@ -1,9 +1,0 @@
-{
-    "mcpServers": {
-        "greet-server" : {
-            "type": "stdio",
-            "command": "/home/cecinuga/Scrivania/Github/arxiv-mcp-server/server.exe",
-            "args": []
-        }
-    }
-}
