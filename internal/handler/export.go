@@ -4,6 +4,7 @@ import (
 	httpclient "arxiv-mcp-server/internal/http-client"
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	atomparser "github.com/wbernest/atom-parser"
@@ -42,7 +43,19 @@ func NewExportMetadata(client *httpclient.Client) func(context.Context, *mcp.Cal
 
 func NewExportRaw(client *httpclient.Client) func(context.Context, *mcp.CallToolRequest, httpclient.QueryParams) (*mcp.CallToolResult, any, error) {
     return func(ctx context.Context, _ *mcp.CallToolRequest, input httpclient.QueryParams) (*mcp.CallToolResult, any, error) {
-        
+        res, err := fetchMetadata(ctx, client, input);
+		if err != nil {
+			return nil, nil, fmt.Errorf("error fetching metadata: %s", err);
+		}
+
+		var resources []string; 
+		
+		for _, entry := range res.Entry {
+			resource := strings.Replace(entry.ID, "abs", "pdf", 1)
+			resources = append(resources, resource)
+		}
+
+		
 
         return &mcp.CallToolResult{}, nil, nil
     }
