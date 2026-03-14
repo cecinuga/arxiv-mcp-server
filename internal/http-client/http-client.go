@@ -97,8 +97,9 @@ func ReadBody(resp *http.Response) ([]byte, error){
 	return io.ReadAll(resp.Body)
 }
 
-func (c *Client) get(ctx context.Context, path string) (*http.Response, error) {
-	return c.do(ctx, http.MethodGet, path, nil, nil)
+func (c *Client) get(ctx context.Context, query string) (*http.Response, error) {	
+	query = fmt.Sprintf("%s%s", "?", query);
+	return c.do(ctx, http.MethodGet, query, nil, nil)
 }
 
 func (c *Client) Get(ctx context.Context, params QueryParams) (*http.Response, error) {
