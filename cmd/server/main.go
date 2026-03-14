@@ -27,7 +27,7 @@ func main(){
 
 	mcp.AddTool(server, &mcp.Tool{
 		Name:        "export-metadata",
-		Description: "Export article's metadata from arxiv.org",
+		Description: "Export article's feed from arxiv.org",
 	}, handler.NewExportMetadata(client))
 
 	mcp.AddTool(server, &mcp.Tool{
