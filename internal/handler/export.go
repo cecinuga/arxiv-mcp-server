@@ -8,6 +8,7 @@ import (
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 	"golang.org/x/tools/blog/atom"
+	"arxiv-mcp-server/internal/api"
 )
 
 func fetchMetadata(ctx context.Context, client *httpclient.Client, input httpclient.QueryParams) (*atom.Feed, error) {
@@ -19,17 +20,20 @@ func fetchMetadata(ctx context.Context, client *httpclient.Client, input httpcli
 	return feed, nil
 }
 
-func fetchPdfUrl(ctx context.Context, client *httpclient.Client, input httpclient.QueryParams) ([]string, error){
+func fetchPdfUrl(ctx context.Context, client *httpclient.Client, input httpclient.QueryParams) ([]api.PdfResource, error){
 	feed, err := fetchMetadata(ctx, client, input);
 	if err != nil {
 		return nil, err;
 	}
 
-	var resources []string; 
+	var resources []api.PdfResource; 
 	
 	for _, entry := range feed.Entry {
-		resource := strings.Replace(entry.ID, "abs", "pdf", 1)
-		resources = append(resources, resource)
+		pdf := strings.Replace(entry.ID, "abs", "pdf", 1)
+		resources = append(resources, api.PdfResource{
+			Pdf: pdf,
+			Meta: api.Metadata{ Author: entry.Author.Name, Title: entry.Title },
+		})
 	}
 
 	return resources, nil
@@ -49,18 +53,22 @@ func NewExportMetadata(client *httpclient.Client) func(context.Context, *mcp.Cal
 
 func NewExportPdfUrl(client *httpclient.Client) func(context.Context, *mcp.CallToolRequest, httpclient.QueryParams) (*mcp.CallToolResult, any, error) {
     return func(ctx context.Context, _ *mcp.CallToolRequest, input httpclient.QueryParams) (*mcp.CallToolResult, any, error) {
-        urls, err := fetchPdfUrl(ctx, client, input);
+        resources, err := fetchPdfUrl(ctx, client, input);
 		if err != nil {
 			return nil, nil, err;
 		}
 		
 		var contents []mcp.Content
-		for _, url := range urls {
+		for _, resource := range resources {
+			metamap := map[string]any{}
+			metamap["title"] = resource.Meta.Title
+			metamap["author"] = resource.Meta.Author
+
 			var meta mcp.Meta
-			//meta.SetMeta("title")
+			meta.SetMeta(metamap)
 
 			contents = append(contents, &mcp.TextContent{ 
-					Text: url,
+					Text: resource.Pdf,
 					Meta: meta,
 				},
 			)
