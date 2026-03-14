@@ -26,9 +26,14 @@ func main(){
 	client := httpclient.New()
 
 	mcp.AddTool(server, &mcp.Tool{
-		Name:        "export",
-		Description: "Export article from arxiv.org",
-	}, handler.NewExport(client))
+		Name:        "export-metadata",
+		Description: "Export metadata article's from arxiv.org",
+	}, handler.NewExportMetadata(client))
+
+	mcp.AddTool(server, &mcp.Tool{
+		Name:        "export-raw",
+		Description: "Export raw data related to article's from arxiv.org",
+	}, handler.NewExportRaw(client))
 
 	transport := &mcp.StdioTransport{};
 
