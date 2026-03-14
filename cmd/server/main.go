@@ -7,9 +7,8 @@ package main
 import (
 	"log"
 	"context"
-
 	"arxiv-mcp-server/internal/handler"
-
+	"arxiv-mcp-server/internal/http-client"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
@@ -24,14 +23,19 @@ func main(){
 		nil,
 	);
 
+	client := httpclient.New()
+
 	mcp.AddTool(server, &mcp.Tool{
-		Name:		"greet",
-		Description:"Saluta una persona per nome",
-	}, handler.HandleGreet);
+		Name:        "export",
+		Description: "Export article from arxiv.org",
+		OutputSchema: `xml:"outputSchema,omitempty"`,
+	}, handler.NewExport(client))
 
 	transport := &mcp.StdioTransport{};
 
 	if err := server.Run(ctx, transport); err != nil {
 		log.Fatal(err);	
 	}
+
+	return;
 }
