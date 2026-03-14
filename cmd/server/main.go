@@ -27,19 +27,17 @@ func main(){
 
 	mcp.AddTool(server, &mcp.Tool{
 		Name:        "export-metadata",
-		Description: "Export metadata article's from arxiv.org",
+		Description: "Export article's metadata from arxiv.org",
 	}, handler.NewExportMetadata(client))
 
 	mcp.AddTool(server, &mcp.Tool{
-		Name:        "export-raw",
-		Description: "Export raw data related to article's from arxiv.org",
-	}, handler.NewExportRaw(client))
+		Name:        "export-pdf-url",
+		Description: "Export the article's pdf URL from arxiv.org",
+	}, handler.NewExportPdfUrl(client))
 
 	transport := &mcp.StdioTransport{};
 
 	if err := server.Run(ctx, transport); err != nil {
 		log.Fatal(err);	
 	}
-
-	return;
 }

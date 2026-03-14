@@ -41,7 +41,7 @@ func NewExportMetadata(client *httpclient.Client) func(context.Context, *mcp.Cal
     }
 }
 
-func NewExportRaw(client *httpclient.Client) func(context.Context, *mcp.CallToolRequest, httpclient.QueryParams) (*mcp.CallToolResult, any, error) {
+func NewExportPdfUrl(client *httpclient.Client) func(context.Context, *mcp.CallToolRequest, httpclient.QueryParams) (*mcp.CallToolResult, any, error) {
     return func(ctx context.Context, _ *mcp.CallToolRequest, input httpclient.QueryParams) (*mcp.CallToolResult, any, error) {
         res, err := fetchMetadata(ctx, client, input);
 		if err != nil {
@@ -55,7 +55,7 @@ func NewExportRaw(client *httpclient.Client) func(context.Context, *mcp.CallTool
 			resources = append(resources, resource)
 		}
 
-		
+
 
         return &mcp.CallToolResult{}, nil, nil
     }
