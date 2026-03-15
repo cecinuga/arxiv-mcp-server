@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os/exec"
 	"context"
 	httpclient "arxiv-mcp-server/internal/http-client"
@@ -25,7 +24,7 @@ func main(){
 
 	session, err := client.Connect(ctx, transport, nil)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
 	}
 	defer session.Close()
 

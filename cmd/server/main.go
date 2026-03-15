@@ -5,10 +5,11 @@
 package main
 
 import (
-	"log"
-	"context"
 	"arxiv-mcp-server/internal/handler"
 	"arxiv-mcp-server/internal/http-client"
+	"context"
+	"fmt"
+
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
 
@@ -38,6 +39,6 @@ func main(){
 	transport := &mcp.StdioTransport{};
 
 	if err := server.Run(ctx, transport); err != nil {
-		log.Fatal(err);	
+		fmt.Println(err)
 	}
 }

@@ -277,8 +277,6 @@ The AI agent invokes `export-metadata` with the appropriate parameters and then 
 
 - [ ] **Structured logging**: replace `log.Fatal` with a structured logger (e.g. `slog`) with configurable levels, useful for debugging and production monitoring.
 
-- [ ] **Improved error handling**: avoid `log.Fatal` in the HTTP client (it terminates the process). Propagate errors properly to the caller.
-
 - [ ] **External configuration**: allow configuring the base URL, timeout, rate limit, and retry via environment variables or a configuration file.
 
 - [ ] **Dockerfile**: add a Dockerfile to simplify deployment and integration in containerized environments.
