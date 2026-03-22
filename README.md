@@ -264,29 +264,27 @@ The AI agent invokes `export-metadata` with the appropriate parameters and then 
 ## TODO — Improvements and future features
 
 
-- [ ] **Fix `logging in stderr`**: currently all logs are printed to stdio, which can interfere with MCP communication. Implement logging to stderr or a separate log file to avoid this issue.
+- [🔴] **`export-bibtex` tool**: add a tool that returns citations in BibTeX format, useful for LaTeX integration and bibliography management tools.
 
-- [ ] **Unit and integration tests**: add a test suite for handlers, the HTTP client, and parameter parsing. Use HTTP mocks for unit tests and integration tests against the real API.
+- [🔴] **`get-article-by-id` tool**: a dedicated tool to retrieve a single article by its arXiv ID (e.g. `2106.09685`), without going through search.
 
-- [ ] **`export-bibtex` tool**: add a tool that returns citations in BibTeX format, useful for LaTeX integration and bibliography management tools.
+- [🔴] **`search-similar` tool**: given an article ID, find related articles based on category and abstract keywords.
 
-- [ ] **`get-article-by-id` tool**: a dedicated tool to retrieve a single article by its arXiv ID (e.g. `2106.09685`), without going through search.
+- [🟠] **Support OR and ANDNOT operators in queries**: currently search filters are combined with `AND` only. Add support for more complex boolean operators.
 
-- [ ] **Support OR and ANDNOT operators in queries**: currently search filters are combined with `AND` only. Add support for more complex boolean operators.
+- [🟠] **Response caching**: implement an in-memory (or on-disk) cache to avoid duplicate API requests and reduce latency.
 
-- [ ] **Response caching**: implement an in-memory (or on-disk) cache to avoid duplicate API requests and reduce latency.
+- [🟡] **Structured logging**: replace `log.Fatal` with a structured logger (e.g. `slog`) with configurable levels, useful for debugging and production monitoring.
 
-- [ ] **Structured logging**: replace `log.Fatal` with a structured logger (e.g. `slog`) with configurable levels, useful for debugging and production monitoring.
+- [🟡] **Dockerfile**: add a Dockerfile to simplify deployment and integration in containerized environments.
 
-- [ ] **External configuration**: allow configuring the base URL, timeout, rate limit, and retry via environment variables or a configuration file.
+- [🟡] **OpenAPI/JSON Schema documentation**: automatically generate tool parameter documentation from the `queryschema` struct tags.
 
-- [ ] **Dockerfile**: add a Dockerfile to simplify deployment and integration in containerized environments.
+- [🟡] **Graceful shutdown handling**: intercept OS signals (SIGINT, SIGTERM) to properly close connections and release resources.
 
-- [ ] **`search-similar` tool**: given an article ID, find related articles based on category and abstract keywords.
+- [🟢] **External configuration**: allow configuring the base URL, timeout, rate limit, and retry via environment variables or a configuration file.
 
-- [ ] **OpenAPI/JSON Schema documentation**: automatically generate tool parameter documentation from the `queryschema` struct tags.
-
-- [ ] **Graceful shutdown handling**: intercept OS signals (SIGINT, SIGTERM) to properly close connections and release resources.
+- [🟢] **Unit and integration tests**: add a test suite for handlers, the HTTP client, and parameter parsing. Use HTTP mocks for unit tests and integration tests against the real API.
 
 ---
 
