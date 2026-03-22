@@ -29,9 +29,9 @@ func fetchPdfUrl(ctx context.Context, client *httpclient.Client, input httpclien
 	var resources []api.PdfResource; 
 	
 	for _, entry := range feed.Entry {
-		pdf := strings.Replace(entry.ID, "abs", "pdf", 1)
+		url := strings.Replace(entry.ID, "abs", "pdf", 1)
 		resources = append(resources, api.PdfResource{
-			Pdf: pdf,
+			Url: url,
 			Meta: api.Metadata{ Author: entry.Author.Name, Title: entry.Title },
 		})
 	}
@@ -68,7 +68,7 @@ func NewExportPdfUrl(client *httpclient.Client) func(context.Context, *mcp.CallT
 			meta.SetMeta(metamap)
 
 			contents = append(contents, &mcp.TextContent{ 
-					Text: resource.Pdf,
+					Text: resource.Url,
 					Meta: meta,
 				},
 			)

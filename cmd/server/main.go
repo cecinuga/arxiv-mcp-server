@@ -32,7 +32,7 @@ func main(){
 	}, handler.NewExportMetadata(client))
 
 	mcp.AddTool(server, &mcp.Tool{
-		Name:        "export-pdf-url",
+		Name:        "export-pdfurl",
 		Description: "Export the article's pdf URL from arxiv.org",
 	}, handler.NewExportPdfUrl(client))
 

@@ -1,7 +1,7 @@
 package api
 
 type PdfResource struct {
-	Pdf string
+	Url string
 	Meta Metadata
 }
 
