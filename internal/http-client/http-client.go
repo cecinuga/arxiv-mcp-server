@@ -105,7 +105,6 @@ func (c *Client) get(ctx context.Context, query string) (*http.Response, error) 
 
 func (c *Client) Get(ctx context.Context, params QueryParams) (*atom.Feed, error) {
 	query := params.Parse()
-
 	res, err := c.get(ctx, query)
 	if err != nil {
 		return nil, err

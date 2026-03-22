@@ -34,7 +34,9 @@ func main(){
 		Name:	  "export-pdfurl",
 		Arguments: httpclient.QueryParams{ 
 			MaxResults: 1, 
-			Search: httpclient.SearchQuery{ Title:"Attention is all you need" },
+			Search: httpclient.SearchQuery{ 
+				Title: "attention",
+			},
 		},
 	})
 	if err != nil {
@@ -44,6 +46,5 @@ func main(){
 	for _, content := range res.Content {
 		fmt.Println(content.(*mcp.TextContent).Text)
 		//meta := content.(*mcp.TextContent).Meta.GetMeta()
-		
 	}
 }

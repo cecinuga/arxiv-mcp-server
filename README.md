@@ -263,7 +263,8 @@ The AI agent invokes `export-metadata` with the appropriate parameters and then 
 
 ## TODO — Improvements and future features
 
-- [ ] **Fix `export-pdf-url`**: the tool currently builds the PDF URL list but returns `nil` instead of the actual resources. Complete the implementation by returning `resources` in the result.
+
+- [ ] **Fix `logging in stderr`**: currently all logs are printed to stdio, which can interfere with MCP communication. Implement logging to stderr or a separate log file to avoid this issue.
 
 - [ ] **Unit and integration tests**: add a test suite for handlers, the HTTP client, and parameter parsing. Use HTTP mocks for unit tests and integration tests against the real API.
 
