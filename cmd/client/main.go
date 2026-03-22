@@ -26,14 +26,13 @@ func main(){
 
 	session, err := client.Connect(ctx, transport, nil)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatalf("error creating client: %s", err)
 	}
 	defer session.Close()
 
 	res, err := session.CallTool(ctx, &mcp.CallToolParams{
 		Name:	  "export-pdfurl",
 		Arguments: httpclient.QueryParams{ 
-			MaxResults: 1, 
 			Search: httpclient.SearchQuery{ 
 				Title: "attention",
 			},

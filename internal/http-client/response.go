@@ -11,12 +11,12 @@ import (
 func ParseAtom(res *http.Response) (*atom.Feed, error){
 	data, err := ReadBody(res);
 	if err != nil {
-		return nil, fmt.Errorf("error reading body response: %s", err)
+		return nil, fmt.Errorf("error reading body response: %w", err)
 	}
 
 	feed, err := atomparser.ParseString(string(data));
 	if err != nil {
-		return nil, fmt.Errorf("error parsing atom xml: %s", err)
+		return nil, fmt.Errorf("error parsing atom xml: %w", err)
 	}
 
 	return feed, nil

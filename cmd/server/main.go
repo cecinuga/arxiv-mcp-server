@@ -39,6 +39,6 @@ func main(){
 	transport := &mcp.StdioTransport{};
 
 	if err := server.Run(ctx, transport); err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
 }
